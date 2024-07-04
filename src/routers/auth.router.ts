@@ -53,6 +53,10 @@ authRouter.post('/sign-up', (req: Request, res: Response) => {
 });
 
 
+
+//비번 해시 처리 하기
+
+
 //로그인 API
 authRouter.post('/sign-in',(req:Request, res:Response, next:NextFunction)=>{
 
@@ -96,5 +100,8 @@ if(!email || !password){
 res.status(200).json({ status: 200, message: '로그인 성공', user });
 
 })
+
+//로그인시 accesstoken 인증 필요
+
 
 export default authRouter;
