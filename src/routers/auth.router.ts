@@ -99,9 +99,21 @@ if(!email || !password){
 // 로그인 성공
 res.status(200).json({ status: 200, message: '로그인 성공', user });
 
-})
-
 //로그인시 accesstoken 인증 필요
 
+//내 프로필 보기
+authRouter.get('/myprofile',(req:Request, res:Response)=>{
+ // const { userId } = req.user; 데이터베이스 사용시 
+const userId = 4; // 예시로 새로생성한 4 유저로 가정
+const user1 = userinfo.find(user => user.userId === userId);
 
+  if (!user1) {
+    return res.status(404).json({ status: 404, message: '사용자를 찾을 수 없습니다.' });
+  }
+
+  // 사용자 프로필 반환
+  res.status(200).json({ status: 200, message: '사용자 프로필 조회 성공', user1 });
+})
+
+})
 export default authRouter;
