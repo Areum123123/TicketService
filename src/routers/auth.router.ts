@@ -11,7 +11,7 @@ const authRouter = express.Router();
 
 
 // 회원가입 API
-authRouter.post('/sign-up', async(req: Request, res: Response) => {
+authRouter.post('/sign-up', async(req: Request, res: Response, next:NextFunction) => {
   try {
     const { name, email, password, passwordConfirm, address } = req.body;
 
@@ -39,6 +39,7 @@ authRouter.post('/sign-up', async(req: Request, res: Response) => {
         password:hashedPassword, 
         name,
         address,
+        
         point: 1000000,
       },
     }); 
@@ -49,8 +50,9 @@ authRouter.post('/sign-up', async(req: Request, res: Response) => {
       // user: newUser,
     });
   } catch (error: any) { // 여기서 any를 사용해도 돼요
-    console.error('회원가입 에러:', error.message); // 여기서는 타입스크립트가 오류를 발생하지 않습니다.
-    res.status(500).json({status:500, message: '서버 에러입니다. 잠시 후 다시 시도해주세요.' });
+    console.error('회원가입 에러:', error.message); 
+    next(error);
+    // res.status(500).json({status:500, message: '서버 에러입니다. 잠시 후 다시 시도해주세요.' });
   }
 });
 
@@ -60,7 +62,7 @@ authRouter.post('/sign-up', async(req: Request, res: Response) => {
 
 //로그인 API
 authRouter.post('/sign-in', async(req:Request, res:Response, next:NextFunction)=>{
-
+try{
   const{email, password} = req.body;
 
 if(!email || !password){
@@ -114,13 +116,18 @@ if(!email || !password){
     message: '로그인 성공했습니다.',
     accessToken: accessToken,
   });
+}catch(err){
+     next(err);  
+  }
 });
 
 
 
+
 //내 프로필 보기
-authRouter.get('/myprofile',authMiddleware, async(req:Request, res:Response)=>{
- const userId  = (req as any).user.userId           //일단이렇게 하긴했는데 될지는 모르겠음       
+authRouter.get('/myprofile',authMiddleware, async(req:Request, res:Response, next:NextFunction)=>{
+ try{
+  const userId  = (req as any).user.userId          
 const user = await prisma.users.findUnique({ 
   where: { userId },
   select:{
@@ -128,6 +135,7 @@ const user = await prisma.users.findUnique({
     name: true,
     email: true,
     address: true,
+    role:true,
     point:true,
     createdAt: true,
    
@@ -138,11 +146,13 @@ const user = await prisma.users.findUnique({
     return res.status(404).json({ status: 404, message: '사용자를 찾을 수 없습니다.' });
   }
 
-
-
-  // 사용자 프로필 반환
+ // 사용자 프로필 반환
   res.status(200).json({ status: 200, messag: "사용자 프로필", date: user });
-})
+}catch(err){
+  next(err);
+}
+});
 
 
+ 
 export default authRouter;

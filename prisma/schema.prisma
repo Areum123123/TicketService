@@ -21,6 +21,44 @@ model Users {
   name      String
   address   String
   point     Int
+  role      Role     @default(CUSTOMER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Booking Booking[]
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+model Performance {
+  PerformanceId        Int     @id @default(autoincrement())
+  title                String
+  description          String @db.Text
+  performancedate      DateTime
+  price                Int  
+  venue                String    // 공연 장소
+  image                String    
+  seats                Int    // 좌석 정보(필수좌석개수)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+Booking Booking[]
+  
+}
+
+
+
+model Booking {
+  bookingId        Int     @id @default(autoincrement())
+  UserId           Int 
+  PerformanceId    Int
+  bookingDate DateTime @default(now())
+
+
+   Users Users             @relation(fields: [UserId], references:[userId],onDelete:Cascade)
+   Performance Performance @relation(fields: [PerformanceId], references:[PerformanceId],onDelete:Cascade)
 }

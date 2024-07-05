@@ -9,13 +9,13 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     return next(err);
   }
 
-  // Joi에서 발생한 에러 처리
-  if (err.name === 'ValidationError') {
-    return res.status(400).json({
-      status: 400,
-      message: err.message,
-    });
-  }
+  // // Joi에서 발생한 에러 처리
+  // if (err.name === 'ValidationError') {
+  //   return res.status(400).json({
+  //     status: 400,
+  //     message: err.message,
+  //   });
+  // }
 
   // 다른 예상치 못한 에러 처리
   return res.status(500).json({
