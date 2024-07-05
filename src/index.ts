@@ -1,7 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/error-handler.middleware';
-import authRouter from './routers/auth.router'
+import apiRouter from './routers/router'
+import performRouter from "./routers/perform.router";
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use('/auth', authRouter);
+app.use('/api', [apiRouter, performRouter]);
 
 app.get('/', (req, res) => {
     res.send('Hello World! hahaha');

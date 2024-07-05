@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Users {
+  userId        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String
+  name      String
+  address   String
+  point     Int
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Booking Booking[]
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+model Performance {
+  PerformanceId        Int     @id @default(autoincrement())
+  title                String
+  description          String @db.Text
+                                // performancedate      DateTime
+  price                Int  
+  venue                String    // 공연 장소
+  image                String    
+  seats                Int    // 좌석 정보(필수좌석개수)
+  category             Category 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ Booking Booking[]
+ PerformanceDate PerformanceDate[]
+  
+}
+
+enum Category {
+  DRAMA
+  MUSICAL
+  CONCERT
+  OPERA
+  BALLET
+  OTHER
+}
+
+
+
+model Booking {
+  bookingId        Int     @id @default(autoincrement())
+  UserId           Int 
+  PerformanceId    Int
+  bookingDate DateTime @default(now())
+
+
+   Users Users             @relation(fields: [UserId], references:[userId],onDelete:Cascade)
+   Performance Performance @relation(fields: [PerformanceId], references:[PerformanceId],onDelete:Cascade)
+}
+
+
+
+model PerformanceDate {
+  id            Int      @id @default(autoincrement())
+  performancedate DateTime
+  performanceId  Int
+
+  performance    Performance @relation(fields: [performanceId], references: [PerformanceId])
+}
