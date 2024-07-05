@@ -37,17 +37,28 @@ model Performance {
   PerformanceId        Int     @id @default(autoincrement())
   title                String
   description          String @db.Text
-  performancedate      DateTime
+                                // performancedate      DateTime
   price                Int  
   venue                String    // 공연 장소
   image                String    
   seats                Int    // 좌석 정보(필수좌석개수)
+  category             Category 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-Booking Booking[]
+ Booking Booking[]
+ PerformanceDate PerformanceDate[]
   
+}
+
+enum Category {
+  DRAMA
+  MUSICAL
+  CONCERT
+  OPERA
+  BALLET
+  OTHER
 }
 
 
@@ -61,4 +72,13 @@ model Booking {
 
    Users Users             @relation(fields: [UserId], references:[userId],onDelete:Cascade)
    Performance Performance @relation(fields: [PerformanceId], references:[PerformanceId],onDelete:Cascade)
+}
+
+
+
+model PerformanceDate {
+  id            Int      @id @default(autoincrement())
+  performancedate DateTime
+  performance    Performance @relation(fields: [performanceId], references: [PerformanceId])
+  performanceId  Int
 }
