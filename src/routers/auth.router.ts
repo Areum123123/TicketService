@@ -44,7 +44,7 @@ authRouter.post('/sign-up', (req: Request, res: Response) => {
     res.status(201).json({
       status:201,
       message: '회원가입이 완료되었습니다.',
-      user: newUser,
+      // user: newUser, user 정보
     });
   } catch (error: any) { // 여기서 any를 사용해도 돼요
     console.error('회원가입 에러:', error.message); // 여기서는 타입스크립트가 오류를 발생하지 않습니다.
@@ -97,7 +97,7 @@ if(!email || !password){
 }
 
 // 로그인 성공
-res.status(200).json({ status: 200, message: '로그인 성공', user });
+res.status(200).json({ status: 200, message: '로그인 성공'});//, user  <-회원가입시 정보 다보고싶다면
 
 //로그인시 accesstoken 인증 필요
 
