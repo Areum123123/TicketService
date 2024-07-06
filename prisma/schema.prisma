@@ -37,11 +37,11 @@ model Performance {
   PerformanceId        Int     @id @default(autoincrement())
   title                String
   description          String @db.Text
-                                // performancedate      DateTime
   price                Int  
   venue                String    // 공연 장소
   image                String    
   seats                Int    // 좌석 정보(필수좌석개수)
+  seatsReserved        Int @default(0) // 예약된 좌석 수
   category             Category 
 
   createdAt DateTime @default(now())
@@ -67,7 +67,9 @@ model Booking {
   bookingId        Int     @id @default(autoincrement())
   UserId           Int 
   PerformanceId    Int
-  bookingDate DateTime @default(now())
+  bookingDate DateTime @default(now())   //예약 완료한 시간
+  seatNumber       String  // 예약된 좌석 번호 (ex, "A30")
+  performancedate   DateTime  // 예약한 공연 날짜
 
 
    Users Users             @relation(fields: [UserId], references:[userId],onDelete:Cascade)
